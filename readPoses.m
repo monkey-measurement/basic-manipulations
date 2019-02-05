@@ -1,4 +1,4 @@
-function [frameIds, Rs, Cs] = readPoses()
+function [Rs, Cs] = readPoses()
   mfile = sprintf('poses.mat');
   if exist(mfile, 'file') == 2
     load(mfile);
@@ -16,13 +16,13 @@ function [frameIds, Rs, Cs] = readPoses()
   Cs = zeros(num_poses, 3);
 
   for i=1:num_poses
-    frame = textscan(cfid, '%d %d', 1);
-    frame = frame{2}+1;
-    frameIds(i) = frame;
+    cam = textscan(cfid, '%d %d', 1);
+    cam = cam{2}+1;
 
-    Cs(i,:) = cell2mat(textscan(cfid, '%f %f %f', 1));
-    Rs(i,:,:) = cell2mat(textscan(cfid, '%f %f %f', 3));
+    Cs(cam,:) = cell2mat(textscan(cfid, '%f %f %f', 1));
+    Rs(cam,:,:) = cell2mat(textscan(cfid, '%f %f %f', 3));
   end
 
-  save(mfile, 'frameIds', 'Rs', 'Cs');
+  % save master list
+  save(mfile, 'Rs', 'Cs');
 end
